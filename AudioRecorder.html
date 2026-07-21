@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -816,119 +816,592 @@ button {
             border-color: rgba(52, 199, 89, 0.45);
             background: linear-gradient(135deg, #48dc75, #24b958);
         }
+
+
+        /* Apple 风格收起/展开布局覆盖 */
+        :root {
+            --panel-bg: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(235,248,255,0.96));
+            --panel-border: rgba(116, 177, 230, 0.55);
+            --ink: #061735;
+            --muted: #5b6f8a;
+            --green: #16c95d;
+            --blue: #1f8fe5;
+        }
+
+        html, body {
+            margin: 0;
+            min-width: 760px;
+            min-height: 390px;
+            overflow: hidden;
+            background: #eef8ff;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+        }
+
+        .background-box {
+            width: 720px;
+            height: 360px;
+            margin: 7px auto;
+            padding: 14px 18px 18px;
+            box-sizing: border-box;
+            border: 1px solid var(--panel-border);
+            border-radius: 22px;
+            background: var(--panel-bg);
+            box-shadow: 0 22px 50px rgba(93, 150, 196, 0.24), inset 0 1px 0 rgba(255,255,255,0.96);
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: 16px;
+        }
+
+        body.recorder-expanded {
+            min-width: 980px;
+            min-height: 790px;
+        }
+
+        body.recorder-expanded .background-box {
+            width: 940px;
+            height: 790px;
+            padding: 26px;
+            gap: 24px;
+        }
+
+        .recorder-title-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(120, 166, 210, 0.32);
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .traffic-lights span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: block;
+            box-shadow: 0 2px 7px rgba(45, 85, 120, 0.2);
+        }
+
+        .traffic-lights span:nth-child(1) { background: #ff5f57; }
+        .traffic-lights span:nth-child(2) { background: #ffbd2e; }
+        .traffic-lights span:nth-child(3) { background: #28c840; }
+
+        h1 {
+            margin: 0;
+            font-size: 27px;
+            line-height: 1;
+            color: var(--ink);
+            letter-spacing: -1px;
+        }
+
+        .app-mark {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(255,255,255,0.78);
+            color: var(--green);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+            font-size: 19px;
+        }
+
+        .title-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: left;
+            margin-right: auto;
+        }
+
+        .version-badge {
+            margin-left: 8px;
+            color: #506786;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .status-text {
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .auto-download-label {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .settings-toggle,
+        .window-size-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            border: 1px solid rgba(108, 144, 187, 0.35);
+            background: rgba(255,255,255,0.9);
+            color: #547097;
+            box-shadow: 0 8px 18px rgba(91, 128, 170, 0.15), inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+
+        .window-size-icon {
+            border-color: #547097;
+            box-shadow: inset 3px 0 0 rgba(84,112,151,0.18), inset 0 3px 0 rgba(84,112,151,0.14);
+        }
+
+        .recorder-main {
+            display: grid;
+            grid-template-columns: 150px 1fr 96px;
+            align-items: center;
+            gap: 26px;
+        }
+
+        body.recorder-expanded .recorder-main {
+            grid-template-columns: 170px 1fr 150px;
+            gap: 34px;
+        }
+
+        .timer-row {
+            display: contents;
+            margin: 0;
+        }
+
+        .record-control-wrap {
+            width: 136px;
+            height: 136px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: rgba(42, 211, 102, 0.12);
+            box-shadow: 0 0 0 10px rgba(32, 207, 92, 0.10);
+        }
+
+        body.recorder-expanded .record-control-wrap {
+            width: 150px;
+            height: 150px;
+        }
+
+        button#toggle {
+            width: 118px;
+            height: 118px;
+            border: 0;
+            background: linear-gradient(180deg, #51ec7f, #12bd51);
+            box-shadow: 0 15px 30px rgba(16, 191, 84, 0.24), inset 0 1px 0 rgba(255,255,255,0.35);
+        }
+
+        body.recorder-expanded button#toggle {
+            width: 136px;
+            height: 136px;
+        }
+
+        .record-icon {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            margin-left: 8px;
+            border-top: 18px solid transparent;
+            border-bottom: 18px solid transparent;
+            border-left: 27px solid #fff;
+        }
+
+        button#toggle.recording .record-icon {
+            width: 32px;
+            height: 32px;
+            margin-left: 0;
+            border: 0;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .timer-line {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+        }
+
+        #timer {
+            color: #0fa144;
+            font-size: 64px !important;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: 2px;
+            text-shadow: 0 12px 24px rgba(15,161,68,0.18);
+        }
+
+        body.recorder-expanded #timer {
+            font-size: 82px !important;
+        }
+
+        canvas#waveform {
+            width: 395px;
+            height: 2px;
+            border: 0;
+            margin: 0 auto;
+            background: linear-gradient(90deg, rgba(110,150,255,0.35), rgba(39,204,105,0.55), rgba(255,92,150,0.28));
+        }
+
+        .time-adjust-card {
+            width: 94px;
+            height: 56px;
+            border: 1px solid rgba(115, 148, 187, 0.35);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.78);
+            box-shadow: 0 12px 24px rgba(91,128,170,0.12);
+            display: grid;
+            grid-template-rows: 18px 1fr;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .time-adjust-card span {
+            font-size: 13px;
+            font-weight: 800;
+            color: #657c9e;
+        }
+
+        .time-adjust-inline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        #timeAdjust {
+            width: 36px !important;
+            margin: 0 !important;
+            border: 0;
+            background: transparent;
+            color: var(--ink);
+            text-align: center;
+            font-size: 21px !important;
+            font-weight: 900;
+        }
+
+        .time-adjust-inline button {
+            width: auto;
+            height: auto;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            color: #496890;
+            box-shadow: none;
+            font-size: 18px;
+        }
+
+        .recorder-bottom {
+            display: grid;
+            gap: 24px;
+            justify-items: center;
+        }
+
+        .filename-builder {
+            width: min(640px, 100%);
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .filename-preview {
+            width: min(640px, 100%);
+            min-height: 56px;
+            border-radius: 28px;
+            border: 1px solid rgba(115, 148, 187, 0.35);
+            background: rgba(255,255,255,0.83);
+            box-shadow: 0 12px 26px rgba(91,128,170,0.12);
+            color: var(--ink);
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .filename-preview::before {
+            content: '🎧';
+            margin-right: 10px;
+            font-size: 17px;
+        }
+
+        .settings-panel {
+            position: absolute;
+            top: 72px;
+            right: 20px;
+            z-index: 40;
+            width: 360px;
+            max-height: 660px;
+            overflow: auto;
+            padding: 16px;
+            border: 1px solid rgba(115, 148, 187, 0.35);
+            border-radius: 22px;
+            background: rgba(255,255,255,0.97);
+            box-shadow: 0 24px 60px rgba(40, 86, 130, 0.22);
+            text-align: left;
+            opacity: 0;
+            transform: translateY(-8px) scale(0.98);
+            pointer-events: none;
+            transition: opacity .18s ease, transform .18s ease;
+        }
+
+        body.settings-open .settings-panel {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .settings-panel h2 {
+            margin: 0 0 14px;
+            color: var(--ink);
+            font-size: 20px;
+        }
+
+        .settings-card {
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 16px;
+            background: rgba(238, 247, 255, 0.74);
+            border: 1px solid rgba(115, 148, 187, 0.18);
+        }
+
+        .settings-card label,
+        .settings-card-title {
+            display: block;
+            margin-bottom: 8px;
+            color: #314760;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        select#bitrate,
+        .settings-card textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid rgba(115, 148, 187, 0.26);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.92);
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 700;
+            padding: 10px 12px;
+        }
+
+        .settings-card textarea {
+            height: 94px;
+            margin: 0;
+            resize: vertical;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .settings-panel .filename-builder {
+            width: 100%;
+            text-align: left;
+        }
+
+        .settings-panel .filename-preview {
+            width: 100%;
+            min-height: 44px;
+            font-size: 15px;
+            border-radius: 16px;
+            justify-content: flex-start;
+            padding: 8px 12px;
+        }
+
+        .settings-panel .filename-settings-panel {
+            position: static;
+            display: none;
+            width: 100%;
+            margin-top: 10px;
+            box-sizing: border-box;
+            border-radius: 16px;
+        }
+
+        .settings-panel .filename-builder.open .filename-settings-panel {
+            display: block;
+        }
+
+        .settings-panel #filenameSettingsShortcut,
+        .settings-panel #cloudLinksButton {
+            width: 100%;
+            height: 44px;
+            border-radius: 14px;
+            border: 0;
+            background: linear-gradient(135deg, #35b7ff, #1677ee);
+            box-shadow: 0 12px 24px rgba(31,143,229,0.2);
+            color: #fff;
+            font-size: 15px;
+        }
+
+        body:not(.recorder-expanded) .expanded-only {
+            display: none;
+        }
+
+        .controls {
+            margin: 0;
+            gap: 86px;
+        }
+
+        .controls button {
+            width: 136px;
+            height: 136px;
+            border: 7px solid rgba(255,255,255,0.85);
+            font-size: 17px;
+            color: #fff;
+            box-shadow: 0 15px 28px rgba(80, 120, 160, 0.17);
+        }
+
+        #downloadWEBM { background: linear-gradient(180deg, rgba(45, 194, 108, .34), rgba(27, 142, 78, .30)); }
+        #downloadMP3 { background: linear-gradient(180deg, rgba(219, 193, 145, .66), rgba(191, 153, 106, .66)); }
+
+        audio#audioPlayback {
+            width: 884px;
+            height: 64px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 10px 24px rgba(91,128,170,0.12);
+        }
+
     </style>
 
   <link rel="stylesheet" href="shared/module-switcher.css">
 </head>
 <body>
-<div class="background-box">     
+<div class="background-box">
     <div class="recorder-title-row">
-        <h1>音频录制器 1.23</h1>
+        <div class="traffic-lights" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="app-mark" aria-hidden="true">♪</div>
+        <div class="title-copy">
+            <h1>音频录制器 <span class="version-badge">1.23</span></h1>
+            <span class="status-text">准备录音</span>
+        </div>
+        <span class="auto-download-label">自动下载</span>
         <label class="auto-download-switch" data-tooltip="自动下载 MP3">
 <input type="checkbox" id="autoDownloadToggle" checked>
             <span class="switch-track" aria-hidden="true"></span>
         </label>
-        <button id="windowSizeToggle" class="window-size-toggle" type="button" aria-label="切换窗口大小" data-tooltip="切换窗口大小"><span class="window-size-icon" aria-hidden="true"></span></button>
-    </div>
-<div class="timer-row">
-    <div class="record-control-wrap">
-        <button id="toggle" type="button" aria-label="开始录音"><span class="record-icon" aria-hidden="true"></span></button>
-        <div id="restartRecordingMenu" class="restart-recording-menu" aria-hidden="true">
-            <p class="restart-menu-text">是否删除当前录音并重新开始录音？</p>
-            <div class="restart-menu-actions">
-                <button type="button" class="restart-menu-action confirm" data-restart-action="confirm">重新开始</button>
-                <button type="button" class="restart-menu-action" data-restart-action="cancel">取消</button>
-            </div>
-        </div>
-        <div id="downloadFolderMenu" class="restart-recording-menu download-folder-menu" aria-hidden="true">
-            <p class="restart-menu-text">已下载音频，是否打开录音文件夹？</p>
-            <div class="restart-menu-actions">
-                <button type="button" class="restart-menu-action confirm" data-download-folder-action="open">打开文件夹</button>
-                <button type="button" class="restart-menu-action" data-download-folder-action="cancel">取消</button>
-            </div>
+        <div class="toolbar-actions">
+            <button id="settingsToggle" class="settings-toggle" type="button" aria-label="打开设置" aria-expanded="false">⚙</button>
+            <button id="windowSizeToggle" class="window-size-toggle" type="button" aria-label="切换窗口大小" data-tooltip="切换窗口大小"><span class="window-size-icon" aria-hidden="true"></span></button>
         </div>
     </div>
-    <p class="timer-line">
-        <span id="timer" style="font-size: 30px;">00:00:00</span>
-        <input type="number" id="timeAdjust" style="font-size: 12px; width: 36px; margin-left: 10px;" placeholder="±秒">
-    </p>
-</div>
 
-
-<div id="popup1" style="display: none;">
-    <div id="popup-content">
-        <span id="close-popup">&times;</span>
-        <p style="font-size: 12px; font-weight: bold; color: dodgerblue;margin-bottom: 5px;margin-top: -10px;">选择复制样式:</p>
-        <button id="copy-plain">① 无样式</button>
-        <button id="copy-color">② 仅颜色</button>
-        <button id="copy-font-size">③ 23px颜色</button>
-        <button id="copy-bg">④ 23px颜色BG</button>
-        <button id="copy-full">⑤ 复制整体样式</button>
-    </div>
-</div>
-
-    <canvas id="waveform"></canvas>
-
-    
-    <div>
-        <label for="bitrate">选择比特率：</label>
-        <select id="bitrate">
-            <option value="8">8 kbps</option>.
-            <option value="16" selected >16 kbps</option>
-            <option value="24">24 kbps</option>
-            
-            <option value="40">40 kbps</option>
-            
-            
-            <option value="64">64 kbps</option>
-            <option value="80">80 kbps</option>
-            <option value="96">96 kbps</option>
-            <option value="112">112 kbps</option>
-            <option value="128">128 kbps</option>
-            <option value="160">160 kbps</option>
-            <option value="192">192 kbps</option>
-            <option value="224">224 kbps</option>
-            <option value="256">256 kbps</option>
-            <option value="320">320 kbps</option>
-        </select>
+    <div class="recorder-main">
+        <div class="record-control-wrap">
+            <button id="toggle" type="button" aria-label="开始录音"><span class="record-icon" aria-hidden="true"></span></button>
+            <div id="restartRecordingMenu" class="restart-recording-menu" aria-hidden="true">
+                <p class="restart-menu-text">是否删除当前录音并重新开始录音？</p>
+                <div class="restart-menu-actions">
+                    <button type="button" class="restart-menu-action confirm" data-restart-action="confirm">重新开始</button>
+                    <button type="button" class="restart-menu-action" data-restart-action="cancel">取消</button>
+                </div>
+            </div>
+            <div id="downloadFolderMenu" class="restart-recording-menu download-folder-menu" aria-hidden="true">
+                <p class="restart-menu-text">已下载音频，是否打开录音文件夹？</p>
+                <div class="restart-menu-actions">
+                    <button type="button" class="restart-menu-action confirm" data-download-folder-action="open">打开文件夹</button>
+                    <button type="button" class="restart-menu-action" data-download-folder-action="cancel">取消</button>
+                </div>
+            </div>
+        </div>
+        <p class="timer-line">
+            <span id="timer">00:00:00</span>
+            <canvas id="waveform"></canvas>
+        </p>
+        <div class="time-adjust-card" aria-label="时间微调">
+            <span>秒</span>
+            <div class="time-adjust-inline">
+                <button type="button" id="timeAdjustMinus" aria-label="减少一秒">-</button>
+                <input type="number" id="timeAdjust" placeholder="0">
+                <button type="button" id="timeAdjustPlus" aria-label="增加一秒">+</button>
+            </div>
+        </div>
     </div>
 
-        <section class="filename-builder" aria-label="录音文件命名规则">
-        <button type="button" class="filename-preview" id="filenamePreview" aria-expanded="false" aria-controls="filenameSettingsPanel">名称：20260101XX名字001.mp3</button>
-        <div class="filename-settings-panel" id="filenameSettingsPanel">
-            <div class="filename-builder-head">
-                <span>命名规则</span>
-                <span class="filename-limit" id="filenameTokenLimit">0 / 20</span>
+    <div class="recorder-bottom">
+        <section class="filename-builder" aria-label="录音文件命名预览">
+            <button type="button" class="filename-preview" id="filenamePreview" aria-expanded="false" aria-controls="filenameSettingsPanel">名称：20260101XX名字001.mp3</button>
+            <div class="filename-settings-panel" id="filenameSettingsPanel">
+                <div class="filename-builder-head">
+                    <span>命名规则</span>
+                    <span class="filename-limit" id="filenameTokenLimit">0 / 20</span>
+                </div>
+                <div class="filename-token-list" id="filenameTokenList" aria-label="当前命名组合"></div>
+                <div class="filename-editor">
+                    <label>日期
+                        <input type="date" id="startDate">
+                    </label>
+                    <label>名称
+                        <input type="text" id="customFilenamePart1" placeholder="名称">
+                    </label>
+                    <label>编号
+                        <input type="text" id="customFilenamePart2" placeholder="编号（1-100）">
+                    </label>
+                    <div class="filename-selected-editor" id="filenameSelectedEditor"></div>
+                </div>
             </div>
-            <div class="filename-token-list" id="filenameTokenList" aria-label="当前命名组合"></div>
-            <div class="filename-editor">
-                <label>日期
-                    <input type="date" id="startDate">
-                </label>
-                <label>名称
-                    <input type="text" id="customFilenamePart1" placeholder="名称">
-                </label>
-                <label>编号
-                    <input type="text" id="customFilenamePart2" placeholder="编号（1-100）">
-                </label>
-                <div class="filename-selected-editor" id="filenameSelectedEditor"></div>
-            </div>
+        </section>
+
+        <div class="controls expanded-only">
+            <button id="downloadWEBM">下载 WEBM</button>
+            <button id="downloadMP3" disabled>下载 MP3</button>
+        </div>
+        <audio id="audioPlayback" class="expanded-only" controls></audio>
+    </div>
+
+    <section id="settingsPanel" class="settings-panel" aria-label="录音设置">
+        <h2>设置</h2>
+        <div class="settings-card">
+            <label for="bitrate">比特率选择</label>
+            <select id="bitrate">
+                <option value="8">8 kbps</option>
+                <option value="16" selected>16 kbps</option>
+                <option value="24">24 kbps</option>
+                <option value="40">40 kbps</option>
+                <option value="64">64 kbps</option>
+                <option value="80">80 kbps</option>
+                <option value="96">96 kbps</option>
+                <option value="112">112 kbps</option>
+                <option value="128">128 kbps</option>
+                <option value="160">160 kbps</option>
+                <option value="192">192 kbps</option>
+                <option value="224">224 kbps</option>
+                <option value="256">256 kbps</option>
+                <option value="320">320 kbps</option>
+            </select>
+        </div>
+        <div class="settings-card">
+            <span class="settings-card-title">文件命名规则</span>
+            <p style="margin:0 0 10px;color:#657c9e;font-size:13px;line-height:1.5;">点击下方按钮可打开底部名称胶囊里的命名组合编辑器。</p>
+            <button id="filenameSettingsShortcut" type="button">打开命名规则</button>
+        </div>
+        <div class="settings-card">
+            <label for="linkInput">打开链接</label>
+            <textarea id="linkInput" placeholder="输入链接，每行一个，格式为：备注 @ 链接"></textarea>
+            <button id="cloudLinksButton" type="button">打开链接</button>
         </div>
     </section>
-    <div class="controls">
-        <button id="downloadWEBM">下载 WEBM</button>
-        <button id="downloadMP3" disabled>下载 MP3</button>
-        <button id="cloudLinksButton">打开链接</button>
 
+    <div id="popup1" style="display: none;">
+        <div id="popup-content">
+            <span id="close-popup">&times;</span>
+            <p style="font-size: 12px; font-weight: bold; color: dodgerblue;margin-bottom: 5px;margin-top: -10px;">选择复制样式:</p>
+            <button id="copy-plain">① 无样式</button>
+            <button id="copy-color">② 仅颜色</button>
+            <button id="copy-font-size">③ 23px颜色</button>
+            <button id="copy-bg">④ 23px颜色BG</button>
+            <button id="copy-full">⑤ 复制整体样式</button>
+        </div>
     </div>
-    <div>
-        <textarea id="linkInput" placeholder="输入链接，每行一个，格式为 '备注 @ 链接'...
-        备注1 @ https:
-        备注2 @ https:
-	"></textarea>
-    </div>
-
-    <audio id="audioPlayback" controls></audio>
+</div>
 <script src="AudioRecorder.js"></script>
     <script src="lamejs.iife.js"></script>
 </body>
