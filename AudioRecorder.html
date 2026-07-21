@@ -1,0 +1,937 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🟢准备录音</title>
+    <link rel="icon" type="image/png" href="icons/icon16.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            font-size: 15px;
+            margin-top: 1px;
+            margin-bottom: 1px;
+            color: green
+        }
+
+        h2 {
+            font-size: 15px;
+            margin-top: 5px;
+            margin-bottom: 1px;
+            color: green
+        }
+
+        .controls {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+
+button {
+            font-size: 13px;
+            font-weight: bold;
+            width: 80px;
+            height: 80px;
+            border: 3px solid #61B2F1; 
+            border-radius: 50%;		
+            background-color: #f0f0f0; 
+            color: white; 
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); 
+        }
+
+        
+        .button {transition: transform 0.3s ease;}
+        
+        #downloadWEBM {background-color: #1CAF50;}
+        #downloadMP3 {background-color: #FFAE00;}
+        
+        #cloudLinksButton{background-color: #2196F3;}
+        
+        #copy-plain,
+        #copy-color,
+        #copy-font-size,
+        #copy-bg,
+        #copy-full{background-color: #00BD6F;font-size: 8px;font-weight: bold;width: 50px;height: 50px;border: 1px solid #61B2F1; }
+        
+        #downloadWEBM:hover,
+        #downloadMP3:hover,
+        #cloudLinksButton:hover{transform: scale(1.2);}
+        
+        #copy-plain:hover,
+        #copy-color:hover,
+        #copy-font-size:hover,
+        #copy-bg:hover,
+        #copy-full:hover{transform: scale(1.8);}
+        canvas {
+            width: 230px;
+            height: 15px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            margin: 1px auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        #timer {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        
+        label[for="bitrate"] {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        select#bitrate {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        
+        label[for="customFilenamePart1"] {
+            font-size: 11px;
+            font-weight: bold;
+        }
+        input#customFilenamePart1 {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        label[for="customFilenamePart2"] {
+            font-size: 11px;
+            font-weight: bold;
+        }
+        input#customFilenamePart2 {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        label[for="savePath"] {
+            font-size: 11px;
+            font-weight: bold;
+        }
+        select#savePath {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        label[for="startDate"] {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+
+	
+        textarea {
+            margin-left: 10px;
+            width: 260px;
+            height: 12px;
+            font-size: 11px; 
+            line-height: 1.2; 
+        }
+
+	
+        .filename-builder {
+            position: relative;
+            width: 300px;
+            margin: 1px auto 2px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            text-align: left;
+        }
+
+        .filename-builder * {
+            box-sizing: border-box;
+        }
+
+        .filename-settings-panel {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 6px);
+            z-index: 20;
+            display: none;
+            width: 300px;
+            max-width: 100%;
+            padding: 6px;
+            overflow: visible;
+            border: 1px solid rgba(97, 178, 236, 0.45);
+            border-radius: 1px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 10px 28px rgba(55, 115, 160, 0.22);
+        }
+
+        .filename-builder.open .filename-settings-panel {
+            display: block;
+        }
+
+        .filename-builder-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #23567A;
+        }
+
+        .filename-limit {
+            color: #7a8793;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .filename-token-list {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 7px 0;
+        }
+
+        .filename-dropdown-toggle {
+            width: 100%;
+            max-width: 100%;
+            min-height: 32px;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 5px 6px;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px dashed rgba(97, 178, 236, 0.65);
+            background: rgba(236, 252, 255, 0.82);
+            box-shadow: 0 2px 6px rgba(55, 115, 160, 0.10);
+            cursor: pointer;
+        }
+
+        .filename-selected-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            min-width: 0;
+            max-width: calc(100% - 12px);
+        }
+
+        .filename-token,
+        .filename-option-btn {
+            width: auto;
+            height: auto;
+            min-height: 23px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.65);
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .filename-token {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #23A8FF, #0573D8);
+            cursor: grab;
+            position: relative;
+            user-select: none;
+        }
+
+        .filename-token:active {
+            cursor: grabbing;
+        }
+
+        .filename-token.selected {
+            outline: 2px solid rgba(255, 172, 0, 0.72);
+            outline-offset: 1px;
+        }
+
+        .filename-token.dragging {
+            opacity: 0.45;
+            transform: scale(0.96);
+        }
+
+        .filename-token.drag-before::before,
+        .filename-token.drag-after::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            bottom: -3px;
+            width: 3px;
+            border-radius: 999px;
+            background: rgba(255, 172, 0, 0.9);
+            box-shadow: 0 0 0 2px rgba(255, 172, 0, 0.16);
+        }
+
+        .filename-token.drag-before::before {
+            left: -2px;
+        }
+
+        .filename-token.drag-after::after {
+            right: -2px;
+        }
+
+        .filename-token-x {
+            width: 12px;
+            height: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.28);
+            font-size: 10px;
+            line-height: 1;
+        }
+
+        .filename-dropdown-arrow {
+            flex: 0 0 auto;
+            color: #23567A;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .filename-dropdown-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 2px);
+            z-index: 5;
+            display: none;
+            width: 100%;
+            max-width: 100%;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 5px;
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid rgba(97, 178, 236, 0.55);
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 8px 18px rgba(55, 115, 160, 0.18);
+        }
+
+        .filename-token-list.open .filename-dropdown-menu {
+            display: grid;
+        }
+
+        .filename-option-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: #23567A;
+            background: linear-gradient(135deg, #ffffff, #e8f5ff);
+            box-shadow: 0 2px 6px rgba(55, 115, 160, 0.10);
+            cursor: pointer;
+        }
+
+        .filename-option-btn:hover {
+            background: linear-gradient(135deg, #e8f5ff, #d5efff);
+        }
+
+        .filename-editor {
+            display: grid;
+            grid-template-columns: minmax(0, 120px) minmax(0, 1fr);
+            column-gap: 12px;
+            row-gap: 6px;
+            width: 100%;
+            max-width: 100%;
+            margin-top: 6px;
+            align-items: start;
+        }
+
+        .filename-editor label {
+            min-width: 0;
+            max-width: 100%;
+            margin: 0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #536B7E;
+        }
+
+        .filename-editor input,
+        .filename-editor select {
+            width: 100%;
+            max-width: 100%;
+            height: 22px;
+            margin-top: 2px;
+            padding: 2px 5px;
+            border: 1px solid #d2e5ec;
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #23567A;
+            background: #fff;
+        }
+
+        .filename-editor label:nth-child(1) {
+            grid-column: 1;
+            grid-row: 1;
+            width: 120px;
+        }
+
+        .filename-editor label:nth-child(2) {
+            grid-column: 2;
+            grid-row: 1;
+            width: 100%;
+            min-height: 32px;
+        }
+
+        .filename-editor label:nth-child(3) {
+            grid-column: 1;
+            grid-row: 2;
+            width: 120px;
+            min-height: 32px;
+        }
+
+        #startDate {
+            width: 90px;
+            opacity: 0.8;
+        }
+
+        #customFilenamePart1 {
+            width: 120px;
+            max-width: 100%;
+        }
+
+        #customFilenamePart2 {
+            width: 90px;
+            max-width: 100%;
+        }
+
+        .filename-selected-editor {
+            grid-column: 1 / -1;
+            width: 100%;
+            max-width: 100%;
+            display: none;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 6px;
+            padding: 6px;
+            overflow: hidden;
+            border-radius: 10px;
+            background: rgba(255, 250, 235, 0.95);
+            border: 1px solid rgba(255, 172, 0, 0.35);
+        }
+
+        .filename-selected-editor.show {
+            display: grid;
+        }
+
+        .filename-selected-editor label {
+            font-weight: 600;
+        }
+
+        .filename-preview {
+            display: block;
+            width: 300px;
+            height: auto;
+            min-height: 28px;
+            margin-top: 0;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #EDF8FF, #FFFFFF);
+            border: 1px solid rgba(97, 178, 236, 0.55);
+            color: #23567A;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: left;
+            word-break: break-all;
+            cursor: pointer;
+        }
+
+        #linkInput {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+#popup1 {
+        
+        }
+
+        #popup-content {
+            
+            align-items: center;
+        }
+
+        #close-popup {
+            font-size: 28px; 
+            align-self: flex-end;
+            cursor: pointer;
+        }
+        .recorder-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: -15px;
+            margin-bottom: 8px;
+        }
+
+        .recorder-title-row h1 {
+            margin: 0;
+        }
+
+        .auto-download-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #5D6A7E;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .auto-download-switch input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .auto-download-switch .switch-track {
+            position: relative;
+            width: 26px;
+            height: 16px;
+            flex: 0 0 auto;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #dfe6ec, #c9d3dc);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18), 0 1px 2px rgba(255, 255, 255, 0.75);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .auto-download-switch .switch-track::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #ffffff, #f4f6f8);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.26);
+            transition: transform 0.2s ease;
+        }
+
+        .auto-download-switch input:checked + .switch-track {
+            background: linear-gradient(180deg, #5ee978, #32c759);
+            box-shadow: inset 0 1px 2px rgba(0, 92, 30, 0.2), 0 1px 2px rgba(255, 255, 255, 0.75);
+        }
+
+        .auto-download-switch input:checked + .switch-track::after {
+            transform: translateX(10px);
+        }
+        .auto-download-switch {
+            position: relative;
+            gap: 0;
+        }
+
+        .auto-download-switch::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            top: calc(100% + 8px);
+            z-index: 30;
+            transform: translate(-50%, -4px);
+            padding: 5px 6px;
+            border-radius: 999px;
+            background: rgba(22, 32, 42, 0.9);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+            transition: opacity 0.16s ease, transform 0.16s ease;
+        }
+
+        .auto-download-switch::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: calc(100% + 3px);
+            z-index: 31;
+            transform: translate(-50%, -4px);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid rgba(22, 32, 42, 0.9);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.16s ease, transform 0.16s ease;
+        }
+
+        .auto-download-switch:hover::before,
+        .auto-download-switch:hover::after,
+        .auto-download-switch:focus-within::before,
+        .auto-download-switch:focus-within::after {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        #toggle {
+            position: static;
+            top: auto;
+            left: auto;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(97, 178, 236, 0.95);
+            border-radius: 50%;
+            background: linear-gradient(145deg, #6ee27d, #21b86e);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.85),
+                0 2px 10px rgba(29, 141, 82, 0.28);
+            transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        #toggle:hover {
+            transform: scale(1.12);
+        }
+
+        #toggle .record-icon {
+            width: 0;
+            height: 0;
+            margin-left: 2px;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 10px solid #ffffff;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.18));
+        }
+
+        #toggle.recording {
+            background: linear-gradient(145deg, #ff6b65, #f04438);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.85),
+                0 2px 6px rgba(205, 45, 45, 0.28);
+        }
+
+        #toggle.recording .record-icon {
+            width: 11px;
+            height: 11px;
+            margin-left: 0;
+            border: 0;
+            border-radius: 3px;
+            background: #ffffff;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.16));
+        }
+        .restart-recording-menu {
+            position: absolute;
+            top: 50%;
+            left: 36px;
+            z-index: 50;
+            width: 210px;
+            padding: 6px;
+            border: 1px solid rgba(97, 178, 236, 0.45);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 10px 26px rgba(55, 115, 160, 0.24);
+            opacity: 0;
+            transform: translate(6px, -50%) scale(0.98);
+            pointer-events: none;
+            transition: opacity 0.16s ease, transform 0.16s ease;
+            text-align: left;
+        }
+
+        .restart-recording-menu.show {
+            opacity: 1;
+            transform: translate(0, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .restart-recording-menu::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -6px;
+            width: 10px;
+            height: 10px;
+            transform: translateY(-50%) rotate(45deg);
+            border-left: 1px solid rgba(97, 178, 236, 0.45);
+            border-bottom: 1px solid rgba(97, 178, 236, 0.45);
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .restart-menu-text {
+            margin: 0 0 9px;
+            color: #23567A;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1.35;
+        }
+
+        .restart-menu-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .restart-menu-action {
+            width: auto;
+            height: 28px;
+            flex: 1;
+            border: 1px solid rgba(97, 178, 236, 0.45);
+            border-radius: 9px;
+            padding: 0 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #23567A;
+            background: linear-gradient(135deg, #ffffff, #e8f5ff);
+            box-shadow: 0 2px 6px rgba(55, 115, 160, 0.10);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .restart-menu-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 10px rgba(55, 115, 160, 0.16);
+        }
+
+        .restart-menu-action.confirm {
+            color: #ffffff;
+            border-color: rgba(255, 100, 92, 0.45);
+            background: linear-gradient(135deg, #ff817a, #f04438);
+        }
+        .timer-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: max-content;
+            margin: 4px auto 5px;
+        }
+
+        .timer-row .timer-line {
+            margin: 0;
+            font-size: 1px;
+            font-weight: bold;
+            color: green;
+        }
+
+        .record-control-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .window-size-toggle {
+            position: relative;
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(62, 156, 255, 0.45);
+            border-radius: 50%;
+            background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(219,239,255,0.92));
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.95),
+                0 3px 8px rgba(36, 120, 190, 0.18);
+            cursor: pointer;
+            transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+        }
+
+
+        .window-size-toggle::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            top: calc(100% + 8px);
+            z-index: 30;
+            transform: translate(-50%, -4px);
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: rgba(22, 32, 42, 0.9);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+            transition: opacity 0.16s ease, transform 0.16s ease;
+        }
+
+        .window-size-toggle::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: calc(100% + 3px);
+            z-index: 31;
+            transform: translate(-50%, -4px);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid rgba(22, 32, 42, 0.9);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.16s ease, transform 0.16s ease;
+        }
+
+        .window-size-toggle:hover::before,
+        .window-size-toggle:hover::after,
+        .window-size-toggle:focus-visible::before,
+        .window-size-toggle:focus-visible::after {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+        .window-size-toggle:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,1),
+                0 5px 12px rgba(36, 120, 190, 0.26);
+        }
+
+        .window-size-toggle:active {
+            transform: translateY(0) scale(0.96);
+        }
+
+        .window-size-icon {
+            width: 10px;
+            height: 10px;
+            border: 1.6px solid #1f8fe5;
+            border-radius: 3px;
+            box-shadow: inset 3px 0 0 rgba(31,143,229,0.22), inset 0 3px 0 rgba(31,143,229,0.18);
+        }
+
+        .download-folder-menu {
+            width: 228px;
+        }
+
+        .download-folder-menu .restart-menu-action.confirm {
+            border-color: rgba(52, 199, 89, 0.45);
+            background: linear-gradient(135deg, #48dc75, #24b958);
+        }
+    </style>
+
+  <link rel="stylesheet" href="shared/module-switcher.css">
+</head>
+<body>
+<div class="background-box">     
+    <div class="recorder-title-row">
+        <h1>音频录制器 1.23</h1>
+        <label class="auto-download-switch" data-tooltip="自动下载 MP3">
+<input type="checkbox" id="autoDownloadToggle" checked>
+            <span class="switch-track" aria-hidden="true"></span>
+        </label>
+        <button id="windowSizeToggle" class="window-size-toggle" type="button" aria-label="切换窗口大小" data-tooltip="切换窗口大小"><span class="window-size-icon" aria-hidden="true"></span></button>
+    </div>
+<div class="timer-row">
+    <div class="record-control-wrap">
+        <button id="toggle" type="button" aria-label="开始录音"><span class="record-icon" aria-hidden="true"></span></button>
+        <div id="restartRecordingMenu" class="restart-recording-menu" aria-hidden="true">
+            <p class="restart-menu-text">是否删除当前录音并重新开始录音？</p>
+            <div class="restart-menu-actions">
+                <button type="button" class="restart-menu-action confirm" data-restart-action="confirm">重新开始</button>
+                <button type="button" class="restart-menu-action" data-restart-action="cancel">取消</button>
+            </div>
+        </div>
+        <div id="downloadFolderMenu" class="restart-recording-menu download-folder-menu" aria-hidden="true">
+            <p class="restart-menu-text">已下载音频，是否打开录音文件夹？</p>
+            <div class="restart-menu-actions">
+                <button type="button" class="restart-menu-action confirm" data-download-folder-action="open">打开文件夹</button>
+                <button type="button" class="restart-menu-action" data-download-folder-action="cancel">取消</button>
+            </div>
+        </div>
+    </div>
+    <p class="timer-line">
+        <span id="timer" style="font-size: 30px;">00:00:00</span>
+        <input type="number" id="timeAdjust" style="font-size: 12px; width: 36px; margin-left: 10px;" placeholder="±秒">
+    </p>
+</div>
+
+
+<div id="popup1" style="display: none;">
+    <div id="popup-content">
+        <span id="close-popup">&times;</span>
+        <p style="font-size: 12px; font-weight: bold; color: dodgerblue;margin-bottom: 5px;margin-top: -10px;">选择复制样式:</p>
+        <button id="copy-plain">① 无样式</button>
+        <button id="copy-color">② 仅颜色</button>
+        <button id="copy-font-size">③ 23px颜色</button>
+        <button id="copy-bg">④ 23px颜色BG</button>
+        <button id="copy-full">⑤ 复制整体样式</button>
+    </div>
+</div>
+
+    <canvas id="waveform"></canvas>
+
+    
+    <div>
+        <label for="bitrate">选择比特率：</label>
+        <select id="bitrate">
+            <option value="8">8 kbps</option>.
+            <option value="16" selected >16 kbps</option>
+            <option value="24">24 kbps</option>
+            
+            <option value="40">40 kbps</option>
+            
+            
+            <option value="64">64 kbps</option>
+            <option value="80">80 kbps</option>
+            <option value="96">96 kbps</option>
+            <option value="112">112 kbps</option>
+            <option value="128">128 kbps</option>
+            <option value="160">160 kbps</option>
+            <option value="192">192 kbps</option>
+            <option value="224">224 kbps</option>
+            <option value="256">256 kbps</option>
+            <option value="320">320 kbps</option>
+        </select>
+    </div>
+
+        <section class="filename-builder" aria-label="录音文件命名规则">
+        <button type="button" class="filename-preview" id="filenamePreview" aria-expanded="false" aria-controls="filenameSettingsPanel">名称：20260101XX名字001.mp3</button>
+        <div class="filename-settings-panel" id="filenameSettingsPanel">
+            <div class="filename-builder-head">
+                <span>命名规则</span>
+                <span class="filename-limit" id="filenameTokenLimit">0 / 20</span>
+            </div>
+            <div class="filename-token-list" id="filenameTokenList" aria-label="当前命名组合"></div>
+            <div class="filename-editor">
+                <label>日期
+                    <input type="date" id="startDate">
+                </label>
+                <label>名称
+                    <input type="text" id="customFilenamePart1" placeholder="名称">
+                </label>
+                <label>编号
+                    <input type="text" id="customFilenamePart2" placeholder="编号（1-100）">
+                </label>
+                <div class="filename-selected-editor" id="filenameSelectedEditor"></div>
+            </div>
+        </div>
+    </section>
+    <div class="controls">
+        <button id="downloadWEBM">下载 WEBM</button>
+        <button id="downloadMP3" disabled>下载 MP3</button>
+        <button id="cloudLinksButton">打开链接</button>
+
+    </div>
+    <div>
+        <textarea id="linkInput" placeholder="输入链接，每行一个，格式为 '备注 @ 链接'...
+        备注1 @ https:
+        备注2 @ https:
+	"></textarea>
+    </div>
+
+    <audio id="audioPlayback" controls></audio>
+<script src="AudioRecorder.js"></script>
+    <script src="lamejs.iife.js"></script>
+</body>
+</html>
+
+

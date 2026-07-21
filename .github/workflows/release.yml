@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read version from tag
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if ($tag -notmatch '^v(.+)$') {
+            throw "Tag must start with v."
+          }
+          "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
+
+      - name: Validate release
+        shell: pwsh
+        run: ./scripts/validate-release.ps1 -ExpectedVersion "${{ steps.version.outputs.version }}"
+
+      - name: Build extension ZIP
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          $dist = Join-Path $PWD "dist"
+          $stage = Join-Path $dist "AudioRecorder"
+          $zipPath = Join-Path $dist "AudioRecorder_V$version.zip"
+          if (Test-Path $dist) {
+            Remove-Item -LiteralPath $dist -Recurse -Force
+          }
+          New-Item -ItemType Directory -Path $stage | Out-Null
+          $include = @(
+            "manifest.json",
+            "AudioRecorder.html",
+            "AudioRecorder.js",
+            "AudioRecorderWorklet.js",
+            "background.js",
+            "lamejs.iife.js",
+            "LICENSE-lamejs.iife.js.txt",
+            "links.txt",
+            "README.md",
+            "PRIVACY.md",
+            "CHANGELOG.md",
+            "LICENSE",
+            "THIRD_PARTY_NOTICES.md",
+            "icons",
+            "shared"
+          )
+          foreach ($item in $include) {
+            Copy-Item -LiteralPath (Join-Path $PWD $item) -Destination $stage -Recurse -Force
+          }
+          Compress-Archive -Path (Join-Path $stage "*") -DestinationPath $zipPath -Force
+          "ZIP_PATH=$zipPath" >> $env:GITHUB_ENV
+
+      - name: Validate ZIP
+        shell: pwsh
+        run: ./scripts/validate-release.ps1 -ExpectedVersion "${{ steps.version.outputs.version }}" -PackagePath "$env:ZIP_PATH"
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: ${{ env.ZIP_PATH }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ZIP_PATH }}
+          generate_release_notes: true
+
