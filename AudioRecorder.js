@@ -1,4 +1,4 @@
-﻿let mediaRecorder;
+let mediaRecorder;
 let recordedChunks = [];
 let timerInterval;
 let totalSeconds = 0;
@@ -16,10 +16,14 @@ let activeAudioContext = null;
 let waveformAnimationId = null;
 const AUTO_DOWNLOAD_STORAGE_KEY = 'audioRecorderAutoDownload';
 const RECORDER_WINDOW_SIZES = {
-    compact: { width: 396, height: 132 },
-    expanded: { width: 396, height: 398 }
+    compact: { width: 760, height: 430 },
+    expanded: { width: 980, height: 840 }
 };
-let isRecorderWindowExpanded = window.outerHeight > 260;
+let isRecorderWindowExpanded = window.outerHeight > 600;
+
+function syncRecorderWindowState() {
+    document.body.classList.toggle('recorder-expanded', isRecorderWindowExpanded);
+}
 
 function applyRecorderWindowSize(size) {
     if (typeof chrome !== 'undefined' && chrome.windows?.getCurrent && chrome.windows?.update) {
@@ -37,13 +41,64 @@ function applyRecorderWindowSize(size) {
 
 function initWindowSizeToggle() {
     const toggle = document.getElementById('windowSizeToggle');
+    syncRecorderWindowState();
     if (!toggle) return;
     toggle.addEventListener('click', () => {
         isRecorderWindowExpanded = !isRecorderWindowExpanded;
+        syncRecorderWindowState();
         applyRecorderWindowSize(isRecorderWindowExpanded ? RECORDER_WINDOW_SIZES.expanded : RECORDER_WINDOW_SIZES.compact);
     });
 }
 
+
+function initSettingsPanel() {
+    const toggle = document.getElementById('settingsToggle');
+    const panel = document.getElementById('settingsPanel');
+    if (!toggle || !panel) return;
+
+    toggle.addEventListener('click', event => {
+        event.stopPropagation();
+        const isOpen = document.body.classList.toggle('settings-open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    panel.addEventListener('click', event => event.stopPropagation());
+
+    document.getElementById('filenameSettingsShortcut')?.addEventListener('click', () => {
+        document.body.classList.remove('settings-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        const filenamePreview = document.getElementById('filenamePreview');
+        const filenameBuilder = document.querySelector('.filename-builder');
+        filenameBuilder?.classList.add('open');
+        filenamePreview?.setAttribute('aria-expanded', 'true');
+    });
+    document.addEventListener('click', () => {
+        document.body.classList.remove('settings-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    });
+}
+
+function initTimeAdjustStepper() {
+    const input = document.getElementById('timeAdjust');
+    const minus = document.getElementById('timeAdjustMinus');
+    const plus = document.getElementById('timeAdjustPlus');
+    if (!input) return;
+
+    const step = delta => {
+        const current = parseInt(input.value, 10) || 0;
+        input.value = String(current + delta);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
+    minus?.addEventListener('click', event => {
+        event.stopPropagation();
+        step(-1);
+    });
+    plus?.addEventListener('click', event => {
+        event.stopPropagation();
+        step(1);
+    });
+}
 
 function isAutoDownloadEnabled() {
     return localStorage.getItem(AUTO_DOWNLOAD_STORAGE_KEY) !== 'false';
@@ -60,6 +115,8 @@ function initAutoDownloadToggle() {
 
 document.addEventListener('DOMContentLoaded', initAutoDownloadToggle);
 document.addEventListener('DOMContentLoaded', initWindowSizeToggle);
+document.addEventListener('DOMContentLoaded', initSettingsPanel);
+document.addEventListener('DOMContentLoaded', initTimeAdjustStepper);
 // 保存用户选择并设置为默认选项
 function setCopyPreference(preference) {
     copyPreference = preference;
