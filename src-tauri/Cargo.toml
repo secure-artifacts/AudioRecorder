@@ -1,0 +1,36 @@
+[package]
+name = "audiorecorder"
+version = "0.0.9"
+description = "AudioRecorder desktop app"
+authors = ["Codex"]
+edition = "2021"
+
+[lib]
+name = "audiorecorder_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+base64 = "0.22"
+dirs = "6"
+rand = "0.8"
+reqwest = { version = "0.12", features = ["blocking", "json"] }
+rfd = "0.15"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+symphonia = { version = "0.5", features = ["mp3", "aac", "isomp4", "wav", "flac", "vorbis"] }
+tauri = { version = "2", features = ["protocol-asset", "tray-icon", "image-png"] }
+urlencoding = "2"
+winreg = "0.55"
+windows = { version = "0.61.3", features = [
+  "Win32_Foundation",
+  "Win32_Media_MediaFoundation",
+  "Win32_Security",
+  "Win32_System_Com",
+  "Win32_System_Com_StructuredStorage",
+  "Win32_System_Threading",
+  "Win32_System_Variant"
+] }

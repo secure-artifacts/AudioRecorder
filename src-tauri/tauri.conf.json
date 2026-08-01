@@ -1,0 +1,51 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "AudioRecorder",
+  "version": "0.0.9",
+  "identifier": "com.codex.audiorecorder",
+  "build": {
+    "beforeDevCommand": "npm.cmd run dev",
+    "beforeBuildCommand": "npm.cmd run build",
+    "devUrl": "http://127.0.0.1:1621",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "AudioRecorder",
+        "width": 500,
+        "height": 236,
+        "minWidth": 250,
+        "minHeight": 115,
+        "center": true,
+        "resizable": false,
+        "decorations": false,
+        "transparent": true,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$CACHE/AudioRecorder/**/*"]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "resources": {
+      "../tools/ffmpeg.exe": "tools/ffmpeg.exe",
+      "../LICENSES": "licenses"
+    },
+    "publisher": "Codex",
+    "category": "Utility"
+  }
+}

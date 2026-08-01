@@ -1,30 +1,24 @@
-.DS_Store
-Thumbs.db
-
-.env
-.env.*
-*.pem
-*.key
-*.p12
-*.pfx
-*.crt
-*.cer
-
+# Dependencies
 node_modules/
-dist/
-build/
-coverage/
-outputs/
 
+# Build output
+dist/
+src-tauri/target/
+
+# Logs and caches
 *.log
 *.tmp
+.vite/
+.tauri/
+
+# Local editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Release archives created outside GitHub Actions
 *.zip
-*.map
-
-*.mp3
-*.webm
-*.wav
-*.m4a
-*.ogg
-*.aac
-
+*.7z
+*.msi
+outputs/

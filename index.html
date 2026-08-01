@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AudioRecorder</title>
+    <style>
+      html,
+      body,
+      #root {
+        min-width: 940px;
+        min-height: 600px;
+        margin: 0;
+        background: #f6fbff;
+        color: #172033;
+        font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      }
+
+      .boot-panel {
+        min-height: 100vh;
+        padding: 42px;
+        background: linear-gradient(135deg, #f8fbff, #edf6ff);
+      }
+
+      .boot-panel h1 {
+        margin: 0 0 14px;
+        color: #111b2d;
+        font-size: 30px;
+      }
+
+      .boot-panel p {
+        margin: 0 0 18px;
+        color: #53657d;
+        font-size: 16px;
+      }
+
+      .boot-panel pre {
+        max-height: calc(100vh - 150px);
+        margin: 0;
+        padding: 18px;
+        overflow: auto;
+        white-space: pre-wrap;
+        color: #123;
+        border: 1px solid rgba(112, 147, 186, 0.35);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.86);
+      }
+
+      .boot-error {
+        background: linear-gradient(135deg, #fff7f7, #eef6ff);
+      }
+
+      .boot-error pre {
+        color: #7f1d1d;
+      }
+
+      .boot-hidden {
+        display: none;
+      }
+    </style>
+    <script src="/lamejs.iife.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="boot-panel" class="boot-panel">
+      <h1>AudioRecorder 正在加载...</h1>
+      <p>如果长时间停在这里，请查看下方调试信息。</p>
+      <pre id="boot-debug">等待 React 应用启动。</pre>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

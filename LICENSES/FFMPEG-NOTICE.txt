@@ -1,0 +1,35 @@
+FFmpeg notice for AudioRecorder
+================================
+
+AudioRecorder bundles a Windows FFmpeg executable for local audio waveform
+generation and long-audio export support.
+
+Bundled file:
+
+- tools/ffmpeg.exe
+
+Version:
+
+- ffmpeg version 8.1.2-essentials_build-www.gyan.dev
+- Built with gcc 16.1.0 (Rev2, Built by MSYS2 project)
+- Package date: 2026-06-27
+
+Source and binary origin:
+
+- Windows build provider: https://www.gyan.dev/ffmpeg/builds/
+- Build variant: release essentials
+- FFmpeg source commit listed by the provider:
+  https://github.com/FFmpeg/FFmpeg/commit/38b88335f9
+- FFmpeg upstream source: https://github.com/FFmpeg/FFmpeg
+
+License:
+
+The bundled gyan.dev static release build is licensed as GPLv3. The included
+binary reports a configuration containing both --enable-gpl and
+--enable-version3.
+
+The GNU General Public License version 3 text is included in:
+
+- LICENSES/GPL-3.0.txt
+
+No modifications were made to the FFmpeg executable in this project.

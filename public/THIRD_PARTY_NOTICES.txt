@@ -1,0 +1,36 @@
+
+This application uses @breezystack/lamejs for MP3 encoding.
+
+Project:
+https://unpkg.com/@breezystack/lamejs@1.2.7/dist/lamejs.iife.js
+
+License:
+GNU Lesser General Public License v3.0
+
+The library is distributed as a separate, unmodified component.
+The corresponding source code is available from the project repository.
+
+------------------------------------------------------------
+
+This application bundles FFmpeg for local audio processing.
+
+Bundled file:
+tools/ffmpeg.exe
+
+Version:
+ffmpeg version 8.1.2-essentials_build-www.gyan.dev
+
+Build provider:
+https://www.gyan.dev/ffmpeg/builds/
+
+Source code:
+https://github.com/FFmpeg/FFmpeg/commit/38b88335f9
+https://github.com/FFmpeg/FFmpeg
+
+License:
+GNU General Public License v3.0
+
+The bundled executable is distributed as a separate, unmodified component.
+The GPL v3 license text and the detailed FFmpeg notice are included in the
+LICENSES directory.
+

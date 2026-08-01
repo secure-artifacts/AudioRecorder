@@ -5,14 +5,13 @@ on:
     tags:
       - "v*"
 
-permissions:
-  contents: write
-  id-token: write
-  attestations: write
-
 jobs:
   release:
     runs-on: windows-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
 
     steps:
       - name: Checkout
@@ -28,56 +27,62 @@ jobs:
           }
           "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
 
-      - name: Validate release
+      - name: Validate release metadata
         shell: pwsh
         run: ./scripts/validate-release.ps1 -ExpectedVersion "${{ steps.version.outputs.version }}"
 
-      - name: Build extension ZIP
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build Tauri MSI
+        run: npm run tauri:build
+
+      - name: Collect release assets
         shell: pwsh
         run: |
           $version = "${{ steps.version.outputs.version }}"
           $dist = Join-Path $PWD "dist"
-          $stage = Join-Path $dist "AudioRecorder"
-          $zipPath = Join-Path $dist "AudioRecorder_V$version.zip"
-          if (Test-Path $dist) {
-            Remove-Item -LiteralPath $dist -Recurse -Force
-          }
-          New-Item -ItemType Directory -Path $stage | Out-Null
-          $include = @(
-            "manifest.json",
-            "AudioRecorder.html",
-            "AudioRecorder.js",
-            "AudioRecorderWorklet.js",
-            "background.js",
-            "lamejs.iife.js",
-            "LICENSE-lamejs.iife.js.txt",
-            "links.txt",
-            "README.md",
-            "PRIVACY.md",
-            "CHANGELOG.md",
-            "LICENSE",
-            "THIRD_PARTY_NOTICES.md",
-            "icons",
-            "shared"
-          )
-          foreach ($item in $include) {
-            Copy-Item -LiteralPath (Join-Path $PWD $item) -Destination $stage -Recurse -Force
-          }
-          Compress-Archive -Path (Join-Path $stage "*") -DestinationPath $zipPath -Force
-          "ZIP_PATH=$zipPath" >> $env:GITHUB_ENV
+          New-Item -ItemType Directory -Force -Path $dist | Out-Null
 
-      - name: Validate ZIP
+          $msi = Get-ChildItem -Path "src-tauri/target/release/bundle/msi" -Filter "*.msi" -Recurse |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+          if (-not $msi) {
+            throw "MSI build output was not found."
+          }
+
+          $assetPath = Join-Path $dist "AudioRecorder_V$version`_windows_x64.msi"
+          Copy-Item -LiteralPath $msi.FullName -Destination $assetPath -Force
+          Get-FileHash -Algorithm SHA256 -LiteralPath $assetPath |
+            ForEach-Object { "$($_.Hash.ToLowerInvariant())  $(Split-Path -Leaf $assetPath)" } |
+            Set-Content -Path (Join-Path $dist "AudioRecorder_V$version`_windows_x64.sha256") -Encoding UTF8
+
+      - name: Validate release assets
         shell: pwsh
-        run: ./scripts/validate-release.ps1 -ExpectedVersion "${{ steps.version.outputs.version }}" -PackagePath "$env:ZIP_PATH"
+        run: ./scripts/validate-release.ps1 -ExpectedVersion "${{ steps.version.outputs.version }}" -PackagePath "dist"
 
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v2
         with:
-          subject-path: ${{ env.ZIP_PATH }}
+          subject-path: dist/*
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ env.ZIP_PATH }}
+          files: dist/*
           generate_release_notes: true
-
+          make_latest: true
